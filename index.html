@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Akamai GMG Designer</title>
+
+<style>
+
+/* BODY */
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+
+    display:flex;
+
+    width:100vw;
+    height:100vh;
+
+    overflow:hidden;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+
+    width:220px;
+    min-width:220px;
+
+    background:#1b1b1b;
+
+    padding:15px;
+
+    box-sizing:border-box;
+}
+
+.sidebar h1{
+
+    color:#ffd000;
+
+    font-size:15px;
+
+    margin-bottom:30px;
+}
+
+.componente{
+
+    background:white;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    margin-bottom:10px;
+
+    cursor:pointer;
+}
+
+/* WORKSPACE */
+
+.workspace{
+
+    flex:1;
+
+    position:relative;
+
+    background:white;
+
+    overflow:hidden;
+}
+
+/* AREA DE DESENHO */
+
+.canvas-area{
+
+    position:relative;
+
+    width:100%;
+    height:100%;
+
+    transform-origin:0 0;
+}
+
+/* CONTROLADOR */
+
+.controlador{
+
+    position:absolute;
+
+    left:50px;
+    top:50px;
+
+    cursor:grab;
+
+    text-align:center;
+}
+
+/* IMAGEM */
+
+.controlador img{
+
+    width:250px;
+
+    user-select:none;
+
+    pointer-events:none;
+}
+.oculto{
+    display:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <h1>Akamai GMG Designer</h1>
+
+    <div class="componente" id="btnControlador">
+    HGM4020N
+</div>
+    <div class="componente">Contator</div>
+    <div class="componente">Relé Auxiliar</div>
+    <div class="componente">Disjuntor</div>
+    <div class="componente">Borne</div>
+    <div class="componente">Temporizador</div>
+
+</div>
+
+<!-- WORKSPACE -->
+
+<div class="workspace">
+
+    <div class="canvas-area">
+
+      <div class="controlador oculto">
+
+            <h3>SMARTGEN HGM4020N</h3>
+
+            <img src="controlador.png">
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+/* CONTROLADOR */
+
+const controlador = document.querySelector(".controlador");
+
+let arrastando = false;
+
+let offsetX = 0;
+let offsetY = 0;
+
+controlador.addEventListener("mousedown", (e)=>{
+
+    arrastando = true;
+
+    offsetX = e.clientX - controlador.offsetLeft;
+    offsetY = e.clientY - controlador.offsetTop;
+
+    controlador.style.cursor = "grabbing";
+});
+
+document.addEventListener("mousemove", (e)=>{
+
+    if(!arrastando) return;
+
+    controlador.style.left = (e.clientX - offsetX) + "px";
+
+    controlador.style.top = (e.clientY - offsetY) + "px";
+});
+
+document.addEventListener("mouseup", ()=>{
+
+    arrastando = false;
+
+    controlador.style.cursor = "grab";
+});
+
+/* ZOOM */
+
+const canvasArea = document.querySelector(".canvas-area");
+
+let zoom = 1;
+
+document.querySelector(".workspace").addEventListener("wheel", (e)=>{
+
+    e.preventDefault();
+
+    if(e.deltaY < 0){
+
+        zoom += 0.1;
+
+    }else{
+
+        zoom -= 0.1;
+    }
+
+    if(zoom < 0.2) zoom = 0.2;
+
+    canvasArea.style.transform = `scale(${zoom})`;
+
+});
+const btnControlador = document.querySelector("#btnControlador");
+
+btnControlador.addEventListener("click", ()=>{
+
+    controlador.classList.toggle("oculto");
+
+});
+</script>
+
+</body>
+</html>
